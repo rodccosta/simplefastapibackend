@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Galeria de Imagens</title>
+  <link rel="stylesheet" href="static/style.css" />
+</head>
+<body>
+  <h1>Galeria</h1>
+  <div id="galeria" class="card" width = "80%">
+  <script>
+    async function carregarImagens() {
+      const resposta = await fetch("/api/imagens");
+      const imagens = await resposta.json();
+      const galeria = document.getElementById("galeria");
+
+      imagens.forEach(nome => {
+        const img = document.createElement("img");
+        img.src = `/uploads/${nome}`;
+        img.alt = nome;
+        img.style.width = "300px";
+        img.style.margin = "10px auto";
+        img.style.display = "block";
+
+        galeria.appendChild(img);
+      });
+    }
+
+    carregarImagens();
+  </script>
+  </div>
+  <p>
+  <a href="/enviar.html">Enviar imagem</a>
+  </p>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<html>
+    <head> 
+        <title>Envio de Imagens</title>
+        <link rel="stylesheet" href="static/style.css" />
+    </head>
+    <body>
+    <h2>Upload de Imagem</h2>
+    <form id="uploadForm">
+        <input type="file" name="arquivo" id="arquivo" required />
+        <button type="submit">Enviar</button>
+    </form>
+
+    <script>
+    const form = document.getElementById('uploadForm');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const input = document.getElementById('arquivo');
+      const file = input.files[0];
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData
+        });
+        const result = await response.json();
+        alert(result.mensagem);
+        window.location.href = "/";
+      } catch (err) {
+        alert('Erro ao enviar: ' + err.message);
+      }
+    });
+  </script>
+  <button onclick="window.history.back()">Voltar</button>
+  </body>
+</html>
