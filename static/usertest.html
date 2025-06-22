@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Cadastramento de Usuários</title>
+    <link rel="stylesheet" href="/static/style.css" />
+
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Cadastramento de Usuários</h1>
+
+        <div class="nav-buttons">
+            <button id="firstBtn">⏮</button>
+            <button id="prevBtn">◀</button>
+            <button id="addBtn">➕</button>
+            <button id="nextBtn">▶</button>
+            <button id="lastBtn">⏭</button>
+        </div>
+
+        <div class="form-card">
+            <div class="form">
+                <div class="form-row">
+                    <label for="id">Id</label>
+                    <input id="id" type="text" disabled />
+                </div>
+                <div class="form-row">
+                    <label for="name">Nome</label>
+                    <input id="name" type="text" disabled />
+                </div>
+                <div class="form-row">
+                    <label for="birthday">Data de Aniversário</label>
+                    <input id="birthday" type="date" disabled />
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button id="editBtn">✏️ editar</button>
+            <button id="removeBtn">❌ remover</button>
+            <button id="cancelBtn" style="display: none">🔙 cancelar</button>
+            <button id="saveBtn" style="display: none">💾 salvar</button>
+        </div>
+    </div>
+
+    <script>
+        let users = []
+
+        async function loadUsers() {
+            try {
+                const response = await fetch('/api/person');
+                if (!response.ok) throw new Error('Erro ao buscar usuários');
+                users = await response.json();
+                currentIndex = 0;
+                setFormData(users[currentIndex]);
+            } catch (error) {
+                alert('Erro ao carregar usuários: ' + error.message);
+            }
+        }
+
+        window.onload = () => {
+            loadUsers();
+
+        };
+
+        let currentIndex = 0;
+
+        const fields = [
+            "id",
+            "name",
+            "birthday"
+        ];
+
+        const setFormData = (user) => {
+            if (user != null) {
+                fields.forEach((field) => {
+                    document.getElementById(field).value = user[field] || "";
+                });
+            }
+        };
+
+        const toggleEditMode = (editMode) => {
+            fields
+                .filter((f) => f !== "id") // não editável
+                .forEach((id) => {
+                    document.getElementById(id).disabled = !editMode;
+                });
+            document.getElementById("editBtn").style.display = editMode ? "none" : "inline-block";
+            document.getElementById("removeBtn").style.display = editMode ? "none" : "inline-block";
+            document.getElementById("cancelBtn").style.display = editMode ? "inline-block" : "none";
+            document.getElementById("saveBtn").style.display = editMode ? "inline-block" : "none";
+        };
+
+        // Navegação
+        document.getElementById("firstBtn").onclick = () => {
+            currentIndex = 0;
+            setFormData(users[currentIndex]);
+        };
+
+        document.getElementById("lastBtn").onclick = () => {
+            currentIndex = users.length - 1;
+            setFormData(users[currentIndex]);
+        };
+
+        document.getElementById("prevBtn").onclick = () => {
+            if (currentIndex > 0) currentIndex--;
+            setFormData(users[currentIndex]);
+        };
+
+        document.getElementById("nextBtn").onclick = () => {
+            if (currentIndex < users.length - 1) currentIndex++;
+            setFormData(users[currentIndex]);
+        };
+
+        document.getElementById("addBtn").onclick = () => {
+            const emptyUser = {
+                id: "",
+                name: "",
+                birthday: ""
+            };
+            setFormData(emptyUser);
+            toggleEditMode(true);
+        };
+
+        // Edição
+        document.getElementById("editBtn").onclick = () => toggleEditMode(true);
+        document.getElementById("cancelBtn").onclick = () => {
+            toggleEditMode(false);
+            setFormData(users[currentIndex]);
+        };
+
+
+
+
+        document.getElementById("saveBtn").onclick = async () => {
+            toggleEditMode(false);
+            const field = [
+                "name",
+                "birthday"];
+            try {
+                const user = {};
+                field.forEach(f => user[f] = document.getElementById(f).value);
+                const response = await fetch('/api/person', {
+                    method: user.id ? 'PUT' : 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(user)
+                });
+                if (!response.ok) throw new Error('Erro ao salvar usuários');
+                users = await response.json();
+                currentIndex = 0;
+                setFormData(users[currentIndex]);
+                alert("Usuário salvo com sucesso!");
+                loadUsers();
+            } catch (error) {
+                alert('Erro ao salvar usuário: ' + error.message);
+            }
+
+
+            // Exemplo: uso de fetch para salvar (comentado)
+            /*
+            
+            */
+        };
+
+        document.getElementById("removeBtn").onclick = async () => {
+            if (!confirm("Tem certeza que deseja remover este usuário?")) return;
+            try {
+                const id = document.getElementById("id").value;
+                const response = await fetch(`/api/person/${id}`, { method: "DELETE" });
+                if (!response.ok) throw new Error('Erro ao remover usuário');
+
+                alert("Usuário removido com sucesso!");
+                loadUsers();
+
+            }
+            catch (error) {
+                alert('Erro ao remover usuário: ' + error.message);
+            }
+            // Exemplo: uso de fetch para remover (comentado)
+            /*
+            
+            */
+        };
+
+        setFormData(users[currentIndex]);
+
+
+    </script>
+</body>
+
+</html>

@@ -60,3 +60,66 @@ button {
   cursor: pointer;
   border-radius: 4px;
 }
+
+/* Container principal */
+.container {
+  text-align: center;
+}
+
+/* Navegação e ações */
+.nav-buttons,
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+/* Botões */
+.nav-buttons button,
+.action-buttons button {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+/* Cartão do formulário */
+.form-card {
+  border: 2px solid #999;
+  border-radius: 8px;
+  background-color: #fff;
+  padding: 25px 30px;
+  max-width: 500px;
+  margin: 0 auto;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Formulário */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+}
+
+input {
+  flex: 1;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f3f3f3;
+}
+
+input[disabled] {
+  background-color: #eee;
+}
+
+.number-field {
+  width: 80px;
+}

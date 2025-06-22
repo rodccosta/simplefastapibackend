@@ -10,7 +10,7 @@
   <div id="galeria" class="card" width = "80%">
   <script>
     async function carregarImagens() {
-      const resposta = await fetch("/api/imagens");
+      const resposta = await fetch("/api/images/list");
       const imagens = await resposta.json();
       const galeria = document.getElementById("galeria");
 
