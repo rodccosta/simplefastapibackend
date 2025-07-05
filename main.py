@@ -17,8 +17,6 @@ app.include_router(person.router)
 #persistencia local 
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 app.mount("/static", StaticFiles(directory="static"), name="static")
-#tipos = GET = Ler / Post = Criar / Delete = Remover / Put = Atualizar
-#@app.<tipo de requisição>
 
 @app.get("/", response_class=HTMLResponse)
 async def serve_index():
